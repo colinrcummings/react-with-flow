@@ -6,26 +6,49 @@ import api from "../api";
 type Props = {};
 
 type State = {
-  data: ?Array<number>
+  fruits: ?Array<string>,
+  vegitables: ?Array<string>,
+  dairy: ?Array<string>,
+  currentSelection: string
 };
 
 class App extends React.Component<Props, State> {
   state = {
-    data: null
+    fruits: null,
+    vegitables: null,
+    dairy: null,
+    currentSelection: "fruits"
   };
 
   componentDidMount() {
-    api.get.then(data => this.setState({ data }));
+    this.handleCurrentSelection(this.state.currentSelection);
   }
 
-  render() {
-    const { data } = this.state;
+  handleCurrentSelection = (currentSelection: string) => {
+    if (!this.state[currentSelection]) {
+      api.get(currentSelection).then(data => {
+        this.setState({
+          [currentSelection]: data,
+          currentSelection
+        });
+      });
+    } else {
+      this.setState({
+        currentSelection
+      });
+    }
+  };
 
-    if (data) {
-      return data.map<React.Node>(d => <h2 key={d}>{d}</h2>);
+  render() {
+    const { currentSelection } = this.state;
+
+    if (this.state[currentSelection]) {
+      return this.state[currentSelection].map<React.Node>(d => (
+        <h2 key={d}>{d}</h2>
+      ));
     }
 
-    return <h1>Loading...</h1>;
+    return <h1>Loading {currentSelection}...</h1>;
   }
 }
 
