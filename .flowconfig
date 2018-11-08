@@ -10,6 +10,7 @@ flow-typed
 [lints]
 
 [options]
+module.name_mapper.extension='css' -> '<PROJECT_ROOT>/flow-config/CSSModule'
 include_warnings=true
 
 [strict]

@@ -1,10 +1,14 @@
 // @flow
-import React from "react";
-import ReactDOM from "react-dom";
+import 'bootstrap/dist/css/bootstrap.css';
 
-import App from "./components/App";
+import React from 'react';
+import ReactDOM from 'react-dom';
 
-const root: ?Element = document.getElementById("root");
+import './index.css';
+
+import App from './components/App';
+
+const root: ?Element = document.getElementById('root');
 
 if (root != null) {
   ReactDOM.render(<App />, root);

@@ -14,7 +14,8 @@
     "build": "react-scripts build",
     "test": "react-scripts test",
     "eject": "react-scripts eject",
-    "postinstall": "flow-typed install"
+    "postinstall": "flow-typed install",
+    "flow": "flow"
   },
   "eslintConfig": {
     "extends": [

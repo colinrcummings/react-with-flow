@@ -1,7 +1,10 @@
 // @flow
-import * as React from "react";
+import * as React from 'react';
+import { Container, Row, Col, ButtonGroup } from 'reactstrap';
 
-import api from "../api";
+import api from '../api';
+import SelectionButton from './SelectionButton';
+import SelectionItems from './SelectionItems';
 
 type Props = {};
 
@@ -17,7 +20,7 @@ class App extends React.Component<Props, State> {
     fruits: null,
     vegitables: null,
     dairy: null,
-    currentSelection: "fruits"
+    currentSelection: 'fruits'
   };
 
   componentDidMount() {
@@ -26,12 +29,13 @@ class App extends React.Component<Props, State> {
 
   handleCurrentSelection = (currentSelection: string) => {
     if (!this.state[currentSelection]) {
-      api.get(currentSelection).then(data => {
-        this.setState({
-          [currentSelection]: data,
-          currentSelection
-        });
-      });
+      this.setState({ currentSelection }, () =>
+        api.get(currentSelection).then(data => {
+          this.setState({
+            [currentSelection]: data
+          });
+        })
+      );
     } else {
       this.setState({
         currentSelection
@@ -41,14 +45,36 @@ class App extends React.Component<Props, State> {
 
   render() {
     const { currentSelection } = this.state;
+    const selectionItems = this.state[currentSelection];
 
-    if (this.state[currentSelection]) {
-      return this.state[currentSelection].map<React.Node>(d => (
-        <h2 key={d}>{d}</h2>
-      ));
-    }
-
-    return <h1>Loading {currentSelection}...</h1>;
+    return (
+      <Container>
+        <Row className="text-center">
+          <Col sm="12">
+            <h1>Food Groups</h1>
+            <hr />
+            <ButtonGroup style={{ marginBottom: 10 }}>
+              {['fruits', 'vegitables', 'dairy'].map(selection => (
+                <SelectionButton
+                  disabled={!selectionItems}
+                  key={selection}
+                  selection={selection}
+                  currentSelection={currentSelection}
+                  handleClick={this.handleCurrentSelection}
+                />
+              ))}
+            </ButtonGroup>
+            {selectionItems ? (
+              <SelectionItems items={selectionItems} />
+            ) : (
+              <p className="text-muted font-italic">
+                Loading {currentSelection}...
+              </p>
+            )}
+          </Col>
+        </Row>
+      </Container>
+    );
   }
 }
 
